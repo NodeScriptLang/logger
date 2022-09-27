@@ -56,4 +56,10 @@ export abstract class Logger implements LoggerLike {
     debug(message: string, data = {}) {
         this.log(LogLevel.DEBUG, message, data);
     }
+
+    setLevel(level: string) {
+        if (Object.values(LogLevel).includes(level as any)) {
+            this.level = level as LogLevel;
+        }
+    }
 }
