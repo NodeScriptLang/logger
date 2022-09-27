@@ -4,9 +4,10 @@ Simple and minimalistic logger interface and implementation.
 
 ## Highlights
 
-- 🗜 Zero dependencies
-- 📦 Console and Logfmt implementations in the box
+- 🔥 Zero dependencies
+- 🗜 Tidy and compact
 - 💻 Works in browser
+- 📦 Console and Logfmt implementations in the box
 
 ## Usage
 
