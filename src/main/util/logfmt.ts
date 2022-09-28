@@ -1,4 +1,4 @@
-export function toLogfmt(object: object, maxDepth = Infinity): string {
+export function toLogfmtEntries(object: object, maxDepth = Infinity): string[] {
     const buffer: string[] = [];
     for (const { path, value } of entries(object, [], maxDepth)) {
         const needsQuoting = value.indexOf(' ') > -1 || value.indexOf('=') > -1 || value.length === 0;
@@ -7,7 +7,11 @@ export function toLogfmt(object: object, maxDepth = Infinity): string {
         const entry = `${path.join('_')}=${str}`;
         buffer.push(entry);
     }
-    return buffer.join(' ');
+    return buffer;
+}
+
+export function toLogfmt(object: object, maxDepth = Infinity): string {
+    return toLogfmtEntries(object, maxDepth).join(' ');
 }
 
 function* entries(object: object, path: string[] = [], maxDepth = Infinity): IterableIterator<{ path: string[]; value: string }> {
