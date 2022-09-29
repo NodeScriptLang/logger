@@ -7,7 +7,7 @@ import { toLogfmt } from './util/logfmt.js';
  */
 export class LogfmtLogger extends ConsoleLogger {
 
-    protected override write(level: LogLevel, message: string, data: object): void {
+    override write(level: LogLevel, message: string, data: object): void {
         const msg = toLogfmt({
             time: new Date(),
             level,

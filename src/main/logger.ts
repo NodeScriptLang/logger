@@ -32,7 +32,7 @@ export interface LoggerLike {
 export abstract class Logger implements LoggerLike {
     level: LogLevel = LogLevel.INFO;
 
-    protected abstract write(level: LogLevel, message: string, data: object): void;
+    abstract write(level: LogLevel, message: string, data: object): void;
 
     log(level: LogLevel, message: string, data: object) {
         if (level === 'mute' || LOG_LEVELS.indexOf(level) < LOG_LEVELS.indexOf(this.level)) {
