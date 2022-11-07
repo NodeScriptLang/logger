@@ -22,6 +22,15 @@ function* entries(object: object, path: string[] = [], maxDepth = Infinity): Ite
         yield { path, value: `<${typeof object}>` };
         return;
     }
+    if (object instanceof Error) {
+        yield* entries({
+            name: object.name,
+            message: object.message,
+            details: (object as any).details,
+            status: (object as any).status,
+        }, path, maxDepth);
+        return;
+    }
     for (const [key, value] of Object.entries(object)) {
         if (value instanceof Date) {
             yield { path: path.concat(key), value: value.toISOString() };
