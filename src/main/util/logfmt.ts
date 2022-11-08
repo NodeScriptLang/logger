@@ -28,6 +28,8 @@ function* entries(object: object, path: string[] = [], maxDepth = Infinity): Ite
             message: object.message,
             details: (object as any).details,
             status: (object as any).status,
+            code: (object as any).code,
+            cause: (object as any).cause,
         }, path, maxDepth);
         return;
     }
