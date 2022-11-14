@@ -7,13 +7,15 @@ import { toLogfmt } from './util/logfmt.js';
  */
 export class LogfmtLogger extends ConsoleLogger {
 
+    maxDepth = 4;
+
     override write(level: LogLevel, message: string, data: object): void {
         const msg = toLogfmt({
             time: new Date(),
             level,
             message,
             ...data,
-        });
+        }, this.maxDepth);
         super.write(level, msg);
     }
 
