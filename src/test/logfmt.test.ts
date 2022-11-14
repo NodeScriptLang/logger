@@ -57,4 +57,10 @@ describe('logfmt', () => {
         }, 2), 'foo_bar=<object> foo_qux=23');
     });
 
+    it('handles circular refs', () => {
+        const obj: any = { foo: 1 };
+        obj.bar = obj;
+        assert.strictEqual(toLogfmt({ obj }, 2), 'obj_foo=1 obj_bar=<object>');
+    });
+
 });
