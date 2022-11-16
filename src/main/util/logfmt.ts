@@ -1,6 +1,18 @@
-export function toLogfmtEntries(object: object, maxDepth = Infinity): string[] {
+export interface LogfmtOptions {
+    maxDepth?: number;
+    maxEntries?: number;
+    maxStringSize?: number;
+}
+
+export function toLogfmtEntries(object: object, options: LogfmtOptions = {}): string[] {
+    let i = 0;
     const buffer: string[] = [];
-    for (const { path, value } of entries(object, [], [], maxDepth)) {
+    const { maxEntries = Infinity } = options;
+    for (const { path, value } of entries(object, [], [], options)) {
+        if (i >= maxEntries) {
+            break;
+        }
+        i += 1;
         const needsQuoting = value.indexOf(' ') > -1 || value.indexOf('=') > -1 || value.length === 0;
         const escaped = value.replace(/["\\]/g, '\\$&');
         const str = needsQuoting ? `"${escaped}"` : escaped;
@@ -10,14 +22,20 @@ export function toLogfmtEntries(object: object, maxDepth = Infinity): string[] {
     return buffer;
 }
 
-export function toLogfmt(object: object, maxDepth = Infinity): string {
-    return toLogfmtEntries(object, maxDepth).join(' ');
+export function toLogfmt(object: object, options: LogfmtOptions = {}): string {
+    return toLogfmtEntries(object, options).join(' ');
 }
 
-function* entries(object: object, path: string[] = [], refs: Iterable<any> = [], maxDepth = Infinity): IterableIterator<{ path: string[]; value: string }> {
+function* entries(
+    object: object,
+    path: string[],
+    refs: Iterable<any>,
+    options: LogfmtOptions,
+): IterableIterator<{ path: string[]; value: string }> {
     if (object == null) {
         return;
     }
+    const { maxDepth = Infinity, maxStringSize = Infinity } = options;
     const refSet = new Set(refs);
     if (path.length >= maxDepth || refSet.has(object)) {
         yield { path, value: `<${typeof object}>` };
@@ -32,7 +50,7 @@ function* entries(object: object, path: string[] = [], refs: Iterable<any> = [],
             status: (object as any).status,
             code: (object as any).code,
             cause: (object as any).cause,
-        }, path, refSet, maxDepth);
+        }, path, refSet, options);
         return;
     }
     for (const [key, value] of Object.entries(object)) {
@@ -40,10 +58,18 @@ function* entries(object: object, path: string[] = [], refs: Iterable<any> = [],
             yield { path: path.concat(key), value: value.toISOString() };
         }
         if (['string', 'number', 'boolean'].includes(typeof value)) {
-            yield { path: path.concat(key), value: String(value) };
+            yield { path: path.concat(key), value: abbr(value, maxStringSize) };
         }
         if (typeof value === 'object') {
-            yield* entries(value, path.concat(key), refSet, maxDepth);
+            yield* entries(value, path.concat(key), refSet, options);
         }
     }
+}
+
+function abbr(value: string | number | boolean, maxSize: number) {
+    const str = String(value);
+    if (str.length > maxSize) {
+        return str.substring(0, maxSize) + '...';
+    }
+    return str;
 }

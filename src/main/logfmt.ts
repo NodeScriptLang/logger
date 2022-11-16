@@ -8,6 +8,8 @@ import { toLogfmt } from './util/logfmt.js';
 export class LogfmtLogger extends ConsoleLogger {
 
     maxDepth = 4;
+    maxEntries = 50;
+    maxStringSize = 1000;
 
     override write(level: LogLevel, message: string, data: object): void {
         const msg = toLogfmt({
@@ -15,7 +17,11 @@ export class LogfmtLogger extends ConsoleLogger {
             level,
             message,
             ...data,
-        }, this.maxDepth);
+        }, {
+            maxDepth: this.maxDepth,
+            maxEntries: this.maxEntries,
+            maxStringSize: this.maxStringSize,
+        });
         super.write(level, msg);
     }
 

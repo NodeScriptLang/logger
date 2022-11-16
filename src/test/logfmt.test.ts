@@ -54,13 +54,23 @@ describe('logfmt', () => {
     it('handles max depth', () => {
         assert.strictEqual(toLogfmt({
             foo: { bar: { baz: 123 }, qux: 23 }
-        }, 2), 'foo_bar=<object> foo_qux=23');
+        }, { maxDepth: 2 }), 'foo_bar=<object> foo_qux=23');
     });
 
     it('handles circular refs', () => {
         const obj: any = { foo: 1 };
         obj.bar = obj;
-        assert.strictEqual(toLogfmt({ obj }, 2), 'obj_foo=1 obj_bar=<object>');
+        assert.strictEqual(toLogfmt({ obj }), 'obj_foo=1 obj_bar=<object>');
+    });
+
+    it('handles max entries', () => {
+        const obj: any = { foo: 1, bar: 2, baz: 3 };
+        assert.strictEqual(toLogfmt({ obj }, { maxEntries: 2 }), 'obj_foo=1 obj_bar=2');
+    });
+
+    it('handles max string size', () => {
+        const obj: any = { foo: 'Looooooooong string', bar: 'Veeeeeeeeeeery loooooong one' };
+        assert.strictEqual(toLogfmt({ obj }, { maxStringSize: 4 }), 'obj_foo=Looo... obj_bar=Veee...');
     });
 
 });
