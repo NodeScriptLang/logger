@@ -1,5 +1,5 @@
 {
-    "name": "@flexent/logger",
+    "name": "@nodescript/logger",
     "version": "1.4.0",
     "description": "Simple logger interface",
     "type": "module",
@@ -26,13 +26,13 @@
     ],
     "repository": {
         "type": "git",
-        "url": "git+ssh://git@github.com/flexent/logger.git"
+        "url": "git+ssh://git@github.com/nodescript/logger.git"
     },
     "keywords": [],
     "author": "Boris Okunskiy",
     "license": "ISC",
     "devDependencies": {
-        "@flexent/eslint-config": "^1.0.0",
+        "@nodescript/eslint-config": "^1.0.0",
         "@types/mocha": "^8.2.3",
         "@types/node": "^16.3.1",
         "eslint": "^8.24.0",
