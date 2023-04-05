@@ -43,13 +43,15 @@ function* entries(
     }
     refSet.add(object);
     if (object instanceof Error) {
+        const err: any = object;
         yield* entries({
-            name: object.name,
-            message: object.message,
-            details: (object as any).details,
-            status: (object as any).status,
-            code: (object as any).code,
-            cause: (object as any).cause,
+            name: err.name,
+            message: err.message,
+            details: err.details,
+            status: err.status,
+            code: err.code,
+            cause: err.cause,
+            stack: err.stack,
         }, path, refSet, options);
         return;
     }
@@ -58,7 +60,7 @@ function* entries(
             yield { path: path.concat(key), value: value.toISOString() };
         }
         if (['string', 'number', 'boolean'].includes(typeof value)) {
-            yield { path: path.concat(key), value: abbr(value, maxStringSize) };
+            yield { path: path.concat(key), value: formatString(value, maxStringSize) };
         }
         if (typeof value === 'object') {
             yield* entries(value, path.concat(key), refSet, options);
@@ -66,10 +68,10 @@ function* entries(
     }
 }
 
-function abbr(value: string | number | boolean, maxSize: number) {
-    const str = String(value);
+function formatString(value: string | number | boolean, maxSize: number) {
+    let str = String(value);
     if (str.length > maxSize) {
-        return str.substring(0, maxSize) + '...';
+        str = str.substring(0, maxSize) + '...';
     }
-    return str;
+    return str.replace(/\s+/g, ' ').trim();
 }
