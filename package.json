@@ -1,6 +1,6 @@
 {
     "name": "@nodescript/logger",
-    "version": "1.4.1",
+    "version": "1.4.2",
     "description": "Simple logger interface",
     "type": "module",
     "sideEffects": false,
