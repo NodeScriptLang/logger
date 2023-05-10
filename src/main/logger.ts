@@ -6,6 +6,8 @@ export enum LogLevel {
     MUTE = 'mute',
 }
 
+export type LogData = Record<string, any>;
+
 export const LOG_LEVELS: LogLevel[] = [
     LogLevel.DEBUG,
     LogLevel.INFO,
@@ -18,10 +20,10 @@ export const LOG_LEVELS: LogLevel[] = [
  * Generic logger interface.
  */
 export interface LoggerLike {
-    info(message: string, data?: object): void;
-    warn(message: string, data?: object): void;
-    error(message: string, data?: object): void;
-    debug(message: string, data?: object): void;
+    info(message: string, data?: LogData): void;
+    warn(message: string, data?: LogData): void;
+    error(message: string, data?: LogData): void;
+    debug(message: string, data?: LogData): void;
 }
 
 /**
@@ -32,9 +34,9 @@ export interface LoggerLike {
 export abstract class Logger implements LoggerLike {
     level: LogLevel = LogLevel.INFO;
 
-    abstract write(level: LogLevel, message: string, data: object): void;
+    abstract write(level: LogLevel, message: string, data: LogData): void;
 
-    log(level: LogLevel, message: string, data: object) {
+    log(level: LogLevel, message: string, data: LogData) {
         if (level === 'mute' || LOG_LEVELS.indexOf(level) < LOG_LEVELS.indexOf(this.level)) {
             return;
         }
