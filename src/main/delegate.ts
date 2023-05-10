@@ -10,7 +10,7 @@ export class DelegateLogger extends Logger {
     }
 
     write(level: LogLevel, message: string, data: object) {
-        this.delegate.write(level, message, { ...this.context, ...data });
+        this.delegate.log(level, message, { ...this.context, ...data });
     }
 
 }
