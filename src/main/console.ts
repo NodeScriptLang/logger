@@ -6,9 +6,11 @@ import { Logger, LogPayload } from './logger.js';
 export class ConsoleLogger extends Logger {
 
     override write(payload: LogPayload): void {
-        const log = (console as any)[payload.level];
+        const { level, message, data } = payload;
+        const log = (console as any)[level];
         if (typeof log === 'function') {
-            log.apply(log, [payload.message, payload.data]);
+            const args = data ? [message, data] : [message];
+            log.apply(log, args);
         }
     }
 

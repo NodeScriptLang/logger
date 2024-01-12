@@ -22,7 +22,6 @@ export class LogfmtFormatter implements LogFormatter {
         return {
             level,
             message: msg,
-            data: {},
         };
     }
 

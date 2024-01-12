@@ -18,12 +18,11 @@ export class StructuredLogFormatter implements LogFormatter {
             severity: this.levelToSeverity(level),
             message,
             time: new Date().toISOString(),
-            ...this.convertObject(data),
+            ...this.convertObject(data ?? {}),
         };
         return {
             level,
             message: JSON.stringify(entry),
-            data: {},
         };
     }
 

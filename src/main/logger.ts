@@ -11,7 +11,7 @@ export enum LogLevel {
 export type LogPayload = {
     level: LogLevel;
     message: string;
-    data: LogData;
+    data?: LogData;
 };
 
 export type LogData = Record<string, any>;
@@ -50,7 +50,7 @@ export abstract class Logger implements LoggerLike {
 
     abstract write(payload: LogPayload): void;
 
-    log(level: LogLevel, message: string, data: LogData) {
+    log(level: LogLevel, message: string, data?: LogData) {
         if (level === 'mute' || LOG_LEVELS.indexOf(level) < LOG_LEVELS.indexOf(this.level)) {
             return;
         }
@@ -58,19 +58,19 @@ export abstract class Logger implements LoggerLike {
         return this.write(formatted);
     }
 
-    info(message: string, data = {}) {
+    info(message: string, data?: LogData) {
         this.log(LogLevel.INFO, message, data);
     }
 
-    warn(message: string, data = {}) {
+    warn(message: string, data?: LogData) {
         this.log(LogLevel.WARN, message, data);
     }
 
-    error(message: string, data = {}) {
+    error(message: string, data?: LogData) {
         this.log(LogLevel.ERROR, message, data);
     }
 
-    debug(message: string, data = {}) {
+    debug(message: string, data?: LogData) {
         this.log(LogLevel.DEBUG, message, data);
     }
 
