@@ -54,7 +54,8 @@ export abstract class Logger implements LoggerLike {
         if (level === 'mute' || LOG_LEVELS.indexOf(level) < LOG_LEVELS.indexOf(this.level)) {
             return;
         }
-        return this.write({ level, message, data });
+        const formatted = this.formatter.format({ level, message, data });
+        return this.write(formatted);
     }
 
     info(message: string, data = {}) {
