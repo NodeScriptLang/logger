@@ -13,7 +13,7 @@ export class LogfmtFormatter implements LogFormatter {
             time: new Date(),
             level,
             message,
-            ...data,
+            ...(data ?? {}),
         }, {
             maxDepth: this.maxDepth,
             maxEntries: this.maxEntries,
