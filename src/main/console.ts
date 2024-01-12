@@ -1,15 +1,14 @@
-import { Logger, LogLevel } from './logger.js';
+import { Logger, LogPayload } from './logger.js';
 
 /**
  * Simple logger using natively available `console` API.
  */
 export class ConsoleLogger extends Logger {
 
-    override write(level: LogLevel, message: string, data?: object): void {
-        const log = (console as any)[level];
+    override write(payload: LogPayload): void {
+        const log = (console as any)[payload.level];
         if (typeof log === 'function') {
-            const args = data == null ? [message] : [message, data];
-            log.apply(log, args);
+            log.apply(log, [payload.message, payload.data]);
         }
     }
 
