@@ -1,3 +1,5 @@
+import { DefaultLogFormatter } from './index.js';
+
 export enum LogLevel {
     DEBUG = 'debug',
     INFO = 'info',
@@ -5,6 +7,12 @@ export enum LogLevel {
     ERROR = 'error',
     MUTE = 'mute',
 }
+
+export type LogPayload = {
+    level: LogLevel;
+    message: string;
+    data: LogData;
+};
 
 export type LogData = Record<string, any>;
 
@@ -26,21 +34,27 @@ export interface LoggerLike {
     debug(message: string, data?: LogData): void;
 }
 
+export interface LogFormatter {
+    format(payload: LogPayload): LogPayload;
+}
+
 /**
  * Standard logger supports conditional log suppressing based on logger level.
  *
  * Implementation must specify `write`.
  */
 export abstract class Logger implements LoggerLike {
-    level: LogLevel = LogLevel.INFO;
 
-    abstract write(level: LogLevel, message: string, data: LogData): void;
+    level: LogLevel = LogLevel.INFO;
+    formatter: LogFormatter = new DefaultLogFormatter();
+
+    abstract write(payload: LogPayload): void;
 
     log(level: LogLevel, message: string, data: LogData) {
         if (level === 'mute' || LOG_LEVELS.indexOf(level) < LOG_LEVELS.indexOf(this.level)) {
             return;
         }
-        return this.write(level, message, data);
+        return this.write({ level, message, data });
     }
 
     info(message: string, data = {}) {
