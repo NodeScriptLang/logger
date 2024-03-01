@@ -1,5 +1,7 @@
 import { Logger, LogPayload } from './logger.js';
 
+const console = global.console;
+
 /**
  * Simple logger using natively available `console` API.
  */
